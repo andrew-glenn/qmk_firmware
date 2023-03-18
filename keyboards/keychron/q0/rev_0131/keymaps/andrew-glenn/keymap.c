@@ -36,23 +36,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         QK_BOOTLOADER,  KC_NO,        KC_NO,          KC_NO,          LSFT(KC_F12),
         KC_NO,          KC_NO,        KC_NO,          KC_NO,          LSFT(KC_F11),
         KC_NO,          KC_NO,        KC_NO,          KC_NO,
-        KC_NO,          KC_NO,        KC_NO,          KC_NO,          LSFT(KC_F10),
+        KC_NO,          KC_NO,        KC_NO,          KC_NO,          KC_KP_ENTER,
         KC_NO,          KC_NO,                        KC_NO),
 };
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
-    case LT(0, LSFT(KC_F10)):
-    if (record->tap.count && record->event.pressed) {
-        return true; // Return true for normal processing of tap keycode
-        break;
-    } else if (record->event.pressed) {
-        tap_code16(KC_Q); // Intercept hold function to send SEMICOLON    
+    case LT(0, KC_Z):
+        if (record->tap.count && record->event.pressed) {
+            tap_code16(KC_X); // Tap Z
+        } else if (record->event.pressed) {
+            tap_code16(KC_Y); // Hold for layer toggle
+        } else {
+            return true;
+        }
         return false;
-    }
   }
-  return true;
 };
 
 #if defined(ENCODER_MAP_ENABLE)
