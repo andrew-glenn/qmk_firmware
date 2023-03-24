@@ -33,19 +33,19 @@ enum layers {
 uint16_t key_timer;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_numpad_6x5(
-        KC_MUTE,        KC_NO,        KC_NO,          KC_NO,          KC_NO,
-        QK_BOOTLOADER,  KC_NO,        KC_NO,          KC_NO,          LSFT(KC_F12),
+        KC_MUTE,        KC_MEDIA_PLAY_PAUSE,        KC_MEDIA_NEXT_TRACK,          KC_NO,          KC_NO,
+        QK_BOOTLOADER,  KC_NO,        KC_NO,          LSG(KC_H),          LSFT(KC_F12),
         KC_NO,          KC_NO,        KC_NO,          KC_NO,          LSFT(KC_F11),
         KC_NO,          KC_NO,        KC_NO,          KC_NO,
         KC_NO,          KC_NO,        KC_NO,          KC_NO,          KC_KP_ENTER,
         TO(JETBRAINS),          KC_NO,                        KC_NO),
     [JETBRAINS] = LAYOUT_numpad_6x5(
-      KC_MUTE,        KC_NO,        KC_NO,          KC_NO,          KC_NO,
-      KC_NO,          KC_NO,        KC_NO,          KC_NO,          KC_NO,
-      KC_NO,          HYPR(KC_7),   HYPR(KC_8),     HYPR(KC_9),     KC_NO,
-      KC_NO,          HYPR(KC_4),   HYPR(KC_5),     HYPR(KC_6),
-      KC_NO,          HYPR(KC_1),   HYPR(KC_2),     HYPR(KC_3),     KC_KP_ENTER,
-      TO(BASE),       HYPR(KC_0),                        KC_NO),
+      KC_TRNS,        KC_NO,             KC_NO,             KC_NO,                         KC_NO,
+      KC_NO,          HYPR(KC_A),        HYPR(KC_KP_SLASH), HYPR(KC_KP_ASTERISK),          HYPR(KC_KP_MINUS),
+      KC_NO,          HYPR(KC_7),        HYPR(KC_8),        HYPR(KC_9),                    HYPR(KC_KP_PLUS),
+      KC_NO,          HYPR(KC_4),        HYPR(KC_5),        HYPR(KC_6),
+      KC_NO,          HYPR(KC_1),        HYPR(KC_2),        HYPR(KC_3),                    KC_TRNS,
+      TO(BASE),       HYPR(KC_0),                           HYPR(KC_KP_DOT)),
 };
 
 void only_active_keys_leds(uint8_t led_min, uint8_t led_max, uint8_t x, uint8_t y, uint8_t z){
@@ -58,9 +58,9 @@ void only_active_keys_leds(uint8_t led_min, uint8_t led_max, uint8_t x, uint8_t 
       if (index >= led_min && index < led_max){
         if (index != NO_LED && keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
           rgb_matrix_set_color(index, x,y,z);
-        } else {
+        } /* else {
           rgb_matrix_set_color(index, 0,0,0);
-        }
+        } */
       }
     }
   }
@@ -95,9 +95,14 @@ bool tap_hold(keyrecord_t* record, uint16_t tapkey, uint16_t holdkey){
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-  switch (keycode) {
-    case KC_KP_ENTER:
-      return tap_hold(record, S(KC_F10), KC_Q);
+  switch(get_highest_layer(layer_state)){
+    case BASE:
+      switch (keycode) {
+        case KC_MUTE:
+          return tap_hold(record, LSG(KC_SPACE), KC_MUTE);
+        case KC_KP_ENTER:
+          return tap_hold(record, S(KC_F10), KC_Q);
+      }
   }
   return true;
 }
