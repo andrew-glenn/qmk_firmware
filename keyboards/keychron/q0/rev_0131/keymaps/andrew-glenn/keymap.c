@@ -34,13 +34,13 @@ uint16_t key_timer;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_numpad_6x5(
         KC_MUTE,        KC_MEDIA_PLAY_PAUSE,        KC_MEDIA_NEXT_TRACK,          KC_NO,          KC_NO,
-        QK_BOOTLOADER,  KC_NO,        KC_NO,          LSG(KC_H),          LSFT(KC_F12),
-        KC_NO,          KC_NO,        KC_NO,          KC_NO,          LSFT(KC_F11),
-        KC_NO,          KC_NO,        KC_NO,          KC_NO,
-        KC_NO,          KC_NO,        KC_NO,          KC_NO,          KC_KP_ENTER,
-        TO(JETBRAINS),          KC_NO,                        KC_NO),
+        QK_BOOTLOADER,  KC_NO,                      KC_NO,                        KC_NO,          LSFT(KC_F12),
+        KC_NO,          KC_NO,                      KC_NO,                        LSG(KC_H),      LSFT(KC_F11),
+        KC_NO,          KC_NO,                      KC_NO,                        KC_NO,
+        KC_NO,          KC_NO,                      KC_NO,                        KC_NO,          KC_KP_ENTER,
+        TO(JETBRAINS),  KC_NO,                                                    KC_NO),
     [JETBRAINS] = LAYOUT_numpad_6x5(
-      KC_TRNS,        KC_NO,             KC_NO,             KC_NO,                         KC_NO,
+      KC_MUTE,        KC_TRNS,             KC_TRNS,             KC_NO,                         KC_NO,
       KC_NO,          HYPR(KC_A),        HYPR(KC_KP_SLASH), HYPR(KC_KP_ASTERISK),          HYPR(KC_KP_MINUS),
       KC_NO,          HYPR(KC_7),        HYPR(KC_8),        HYPR(KC_9),                    HYPR(KC_KP_PLUS),
       KC_NO,          HYPR(KC_4),        HYPR(KC_5),        HYPR(KC_6),
@@ -103,14 +103,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         case KC_KP_ENTER:
           return tap_hold(record, S(KC_F10), KC_Q);
       }
+    case JETBRAINS:
+      switch (keycode) {
+        case KC_MUTE:
+          return tap_hold(record, LSG(KC_SPACE), KC_MUTE);
+      }
   }
   return true;
 }
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
-    [JETBRAINS] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [BASE] =      { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [JETBRAINS] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
    // [FUNC] = { ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
 };
 #endif
